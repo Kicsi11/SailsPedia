@@ -108,7 +108,7 @@
                     <h3 class="font-bold text-gray-900 border-b border-gray-200 pb-1.5 mb-2 uppercase text-[10px] tracking-wider text-gray-500">Navigation</h3>
                     <ul class="space-y-2">
                         <li><a data-nav="Main Page" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-house w-4 text-center text-gray-400"></i><span>Main Page</span></a></li>
-                        <li><a onclick="showAllArticles()" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-list-ul w-4 text-center text-gray-400"></i><span>All Articles</span></a></li>
+                        <li><a id="all-articles-btn" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-list-ul w-4 text-center text-gray-400"></i><span>All Articles</span></a></li>
                     </ul>
                 </div>
 
@@ -406,6 +406,7 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
             searchResults.classList.add("hidden");
         });
 
+        // Event listener for sidebar links and inline navigation
         document.addEventListener('click', (e) => {
             const catEl = e.target.closest('[data-category]');
             if (catEl) {
@@ -413,6 +414,7 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
                 const category = catEl.getAttribute('data-category');
                 if (category) {
                     searchResults.classList.add("hidden");
+                    document.getElementById("sidebar").classList.add("hidden");
                     renderCategoryPage(category);
                 }
                 return;
@@ -424,8 +426,18 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
                 const target = navEl.getAttribute('data-nav');
                 if (target) {
                     searchResults.classList.add("hidden");
+                    document.getElementById("sidebar").classList.add("hidden");
                     renderPage(target);
                 }
+                return;
+            }
+
+            const allArticlesEl = e.target.closest('#all-articles-btn');
+            if (allArticlesEl) {
+                e.preventDefault();
+                searchResults.classList.add("hidden");
+                document.getElementById("sidebar").classList.add("hidden");
+                showAllArticles();
             }
         });
 
