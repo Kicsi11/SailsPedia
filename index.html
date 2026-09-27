@@ -13,8 +13,13 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Linux+Libertine:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
     
-    <!-- External Articles Data File -->
-    <script src="articles.js"></script>
+    <!-- Initialize Master Data Object -->
+    <script>
+        window.ARTICLES_DATABASE = {};
+    </script>
+
+    <!-- Data Files from your /data folder -->
+    <script src="data/ships.js"></script>
 
     <style>
         body {
@@ -107,14 +112,11 @@
                     </ul>
                 </div>
 
-                <!-- Categories Section -->
+                <!-- Single Category Section -->
                 <div class="bg-white p-3 rounded border border-gray-300 shadow-2xs">
                     <h3 class="font-bold text-gray-900 border-b border-gray-200 pb-1.5 mb-2 uppercase text-[10px] tracking-wider text-gray-500">Categories</h3>
                     <ul class="space-y-2">
                         <li><a data-category="Ships & Vessels" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-ship w-4 text-center text-gray-400"></i><span>Ships & Vessels</span></a></li>
-                        <li><a data-category="Factions & Lore" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-flag w-4 text-center text-gray-400"></i><span>Factions & Lore</span></a></li>
-                        <li><a data-category="Locations & Zones" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-map-location-dot w-4 text-center text-gray-400"></i><span>Locations & Zones</span></a></li>
-                        <li><a data-category="Game Mechanics" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-compass w-4 text-center text-gray-400"></i><span>Game Mechanics</span></a></li>
                     </ul>
                 </div>
             </div>
@@ -223,7 +225,7 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
                     <div class="p-6 text-center bg-gray-50 border border-dashed border-gray-300 rounded my-4">
                         <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-400 mb-2"></i>
                         <h3 class="font-bold text-gray-700 text-base mb-1">Page "${escapeHtml(pageKey)}" does not exist yet.</h3>
-                        <p class="text-xs text-gray-500 max-w-md mx-auto">To add this page, open <code class="bg-gray-200 px-1 py-0.5 rounded text-gray-800">articles.js</code> and copy one of the templates at the top!</p>
+                        <p class="text-xs text-gray-500 max-w-md mx-auto">This article has not been added to your data files yet.</p>
                         <button onclick="renderPage('Main Page')" class="mt-4 px-3 py-1.5 bg-[#0645ad] text-white rounded text-xs font-bold hover:bg-blue-800 transition">
                             Back to Main Page
                         </button>
@@ -301,7 +303,9 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
 
             titleEl.innerText = categoryName;
 
-            const matches = Object.keys(db).filter(key => db[key].category === categoryName);
+            const matches = Object.keys(db)
+                .filter(key => db[key].category === categoryName)
+                .sort((a, b) => a.localeCompare(b));
 
             if (matches.length === 0) {
                 contentEl.innerHTML = `
