@@ -120,7 +120,6 @@
             </div>
         </aside>
 
-        <!-- Main Article Area -->
         <main class="flex-1 min-w-0 bg-white border border-[#a2a9b1] rounded p-5 sm:p-8 shadow-2xs">
             
             <!-- Article Header -->
@@ -131,12 +130,6 @@
 
             <!-- Article Content Container -->
             <div id="article-content" class="text-sm leading-relaxed text-gray-800 space-y-4"></div>
-
-            <!-- Category Tag Footer -->
-            <div class="mt-10 pt-3 border-t border-[#a2a9b1] text-xs bg-gray-50 p-2.5 rounded flex items-center gap-2">
-                <span class="font-bold text-gray-600">Category:</span>
-                <span id="article-category-tag" class="inline-block"></span>
-            </div>
 
         </main>
     </div>
@@ -156,13 +149,7 @@
                     }
                 },
                 content: `== Welcome to SailsPedia ==
-Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
-
-== Featured Articles ==
-* [[HMS Sovereign]] - Heavy Tier V flagship warship.
-* [[Corsair Syndicate]] - Rogue outlaw pirate faction.
-* [[Sunken Archipelago]] - High-risk open ocean zone.
-* [[Sailing Mechanics]] - Master wind vectors and tacking.`
+Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
             }
         };
 
@@ -227,18 +214,16 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
             const article = db[pageKey];
             const contentEl = document.getElementById("article-content");
             const titleEl = document.getElementById("article-title");
-            const catTagEl = document.getElementById("article-category-tag");
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             if (!article) {
                 titleEl.innerText = pageKey;
-                catTagEl.innerHTML = `<span class="text-gray-400 italic">Uncategorized</span>`;
                 contentEl.innerHTML = `
                     <div class="p-6 text-center bg-gray-50 border border-dashed border-gray-300 rounded my-4">
                         <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-400 mb-2"></i>
                         <h3 class="font-bold text-gray-700 text-base mb-1">Page "${escapeHtml(pageKey)}" does not exist yet.</h3>
-                        <p class="text-xs text-gray-500 max-w-md mx-auto">To add this page, open <code class="bg-gray-200 px-1 py-0.5 rounded text-gray-800">articles.js</code> in your repository and add a new entry.</p>
+                        <p class="text-xs text-gray-500 max-w-md mx-auto">To add this page, open <code class="bg-gray-200 px-1 py-0.5 rounded text-gray-800">articles.js</code> and copy one of the templates at the top!</p>
                         <button onclick="renderPage('Main Page')" class="mt-4 px-3 py-1.5 bg-[#0645ad] text-white rounded text-xs font-bold hover:bg-blue-800 transition">
                             Back to Main Page
                         </button>
@@ -248,7 +233,6 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
             }
 
             titleEl.innerText = article.title;
-            catTagEl.innerHTML = `<a data-category="${escapeHtml(article.category)}" class="bg-gray-100 border border-gray-300 px-2 py-0.5 rounded text-xs text-gray-700 hover:bg-blue-50 hover:text-[#0645ad] cursor-pointer transition">${escapeHtml(article.category)}</a>`;
 
             let infoboxHtml = "";
             if (article.infobox) {
@@ -291,10 +275,8 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
             const keys = Object.keys(db).sort();
             const titleEl = document.getElementById("article-title");
             const contentEl = document.getElementById("article-content");
-            const catTagEl = document.getElementById("article-category-tag");
 
             titleEl.innerText = "All Articles Directory";
-            catTagEl.innerHTML = `<span class="text-gray-400 italic text-xs">Index</span>`;
 
             let html = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
             keys.forEach(key => {
@@ -302,7 +284,6 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
                 html += `
                     <div class="p-3 bg-gray-50 border border-gray-200 rounded hover:border-blue-400 transition">
                         <a data-nav="${escapeHtml(key)}" class="wiki-link font-bold text-sm block">${escapeHtml(art.title)}</a>
-                        <a data-category="${escapeHtml(art.category)}" class="text-[10px] text-gray-500 bg-white border px-1.5 py-0.5 rounded inline-block mt-1 hover:text-[#0645ad] cursor-pointer">${escapeHtml(art.category)}</a>
                     </div>
                 `;
             });
@@ -315,12 +296,10 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
             const db = getArticlesDatabase();
             const titleEl = document.getElementById("article-title");
             const contentEl = document.getElementById("article-content");
-            const catTagEl = document.getElementById("article-category-tag");
 
             window.scrollTo({ top: 0, behavior: 'smooth' });
 
             titleEl.innerText = categoryName;
-            catTagEl.innerHTML = `<span class="bg-blue-50 text-[#0645ad] border border-blue-200 px-2 py-0.5 rounded text-xs font-semibold">Category Index</span>`;
 
             const matches = Object.keys(db).filter(key => db[key].category === categoryName);
 
@@ -335,7 +314,7 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
             }
 
             let html = `
-                <p class="text-xs text-gray-600 mb-5">Showing all documentation, entries, and guides classified under <span class="font-bold text-gray-800">${escapeHtml(categoryName)}</span>:</p>
+                <p class="text-xs text-gray-600 mb-5">Showing all entries listed under <span class="font-bold text-gray-800">${escapeHtml(categoryName)}</span>:</p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             `;
 
@@ -349,9 +328,6 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!
                         <div>
                             <div class="h-36 overflow-hidden bg-gray-100 relative">
                                 <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(article.title)}" class="w-full h-full object-cover group-hover:scale-105 transition duration-300">
-                                <span class="absolute top-2 right-2 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded backdrop-blur-xs font-medium">
-                                    ${escapeHtml(article.category)}
-                                </span>
                             </div>
                             <div class="p-3.5">
                                 <h3 class="font-bold text-sm text-gray-900 group-hover:text-[#0645ad] transition mb-1">
