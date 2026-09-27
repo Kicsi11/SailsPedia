@@ -5,14 +5,14 @@ window.ARTICLES_DATABASE["Main Page"] = {
     category: "System Overview",
     infobox: {
         title: "SAILS",
-        image: "https://imgur.com/a/XhrSbbR", 
+        image: "https://i.imgur.com/HzsTMxv.png", 
         caption: "SAILS Banner Art",
         stats: {
             "Developer": "Fortune Interactive", 
             "Platform": "Steam (PC)"
         }
     },
-    content: `![SAILS Banner](https://imgur.com/a/XhrSbbR)
+    content: `![SAILS Banner](https://i.imgur.com/HzsTMxv.png)
 
 == About the Game ==
 **SAILS** is a game where you plunder, craft and live the pirate’s life. This is a multiplayer pirate survival game where you mine, craft, trade and plunder to survive. Form alliances with other players to strengthen your crew and wage war on your enemies. Fight to keep what’s yours before others take it.
