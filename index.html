@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SailsPedia - Game Guide</title>
+    <title>SailsPedia - Player Guide</title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons -->
@@ -79,7 +79,7 @@
                 <div data-nav="Main Page" class="flex items-center space-x-2.5 cursor-pointer group">
                     <div>
                         <span class="wiki-title text-xl font-bold tracking-tight text-gray-900 group-hover:text-[#0645ad] transition">Sails<span class="text-[#0645ad]">Pedia</span></span>
-                        <span class="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold -mt-1">Game Guide</span>
+                        <span class="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold -mt-1">Player Wiki</span>
                     </div>
                 </div>
             </div>
@@ -112,7 +112,7 @@
                     </ul>
                 </div>
 
-                <!-- Single Category Section -->
+                <!-- Categories Section -->
                 <div class="bg-white p-3 rounded border border-gray-300 shadow-2xs">
                     <h3 class="font-bold text-gray-900 border-b border-gray-200 pb-1.5 mb-2 uppercase text-[10px] tracking-wider text-gray-500">Categories</h3>
                     <ul class="space-y-2">
@@ -127,7 +127,7 @@
             <!-- Article Header -->
             <div class="border-b border-[#a2a9b1] pb-3 mb-5">
                 <h1 id="article-title" class="wiki-title text-2xl sm:text-3xl text-gray-900 leading-tight">Loading...</h1>
-                <p id="article-subtitle" class="text-xs text-gray-500 mt-1 italic">From SailsPedia, the official playtest encyclopedia</p>
+                <p id="article-subtitle" class="text-xs text-gray-500 mt-1 italic">From SailsPedia, the ultimate player guide</p>
             </div>
 
             <!-- Article Content Container -->
@@ -142,16 +142,15 @@
                 title: "Main Page",
                 category: "System Overview",
                 infobox: {
-                    title: "Sails Playtest",
-                    caption: "Official Sails Playtest Build",
+                    title: "Sails Overview",
+                    caption: "Official Sails Wiki",
                     stats: {
                         "Developer": "Solo Developer",
-                        "Phase": "Closed Playtest",
                         "Platform": "PC / Web"
                     }
                 },
                 content: `== Welcome to SailsPedia ==
-Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
+Welcome to **SailsPedia**, your resource for all *Sails* information!`
             }
         };
 
@@ -406,7 +405,6 @@ Welcome to **SailsPedia**, the official wiki for the *Sails* playtest!`
             searchResults.classList.add("hidden");
         });
 
-        // Event listener for sidebar links and inline navigation
         document.addEventListener('click', (e) => {
             const catEl = e.target.closest('[data-category]');
             if (catEl) {
