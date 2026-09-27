@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full bg-gray-100">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SailsPedia - Playtest Encyclopedia</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Wikipedia Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Linux+Libertine:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    
+    <!-- External Articles Data File for GitHub Hosting -->
+    <script src="articles.js"></script>
+
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            color: #202122;
+        }
+
+        .wiki-title {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+            font-weight: normal;
+        }
+
+        .wiki-link {
+            color: #0645ad;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .wiki-link:hover {
+            text-decoration: underline;
+        }
+
+        .wiki-link.missing {
+            color: #dd3333;
+        }
+
+        .wiki-h2 {
+            font-family: 'Linux Libertine', 'Georgia', 'Times', serif;
+            border-bottom: 1px solid #a2a9b1;
+        }
+
+        .infobox {
+            border: 1px solid #a2a9b1;
+            background-color: #f8f9fa;
+            width: 100%;
+            font-size: 0.85rem;
+        }
+
+        @media (min-width: 640px) {
+            .infobox {
+                width: 280px;
+                float: right;
+                margin-left: 1rem;
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col bg-[#f6f6f6] text-gray-900">
+
+    <!-- Sticky Wiki Header Bar -->
+    <header class="bg-white border-b border-[#a2a9b1] sticky top-0 z-40 px-4 py-2.5 shadow-xs">
+        <div class="max-w-7xl mx-auto flex items-center justify-between gap-3">
+            <div class="flex items-center space-x-3">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-600 hover:text-black p-1" aria-label="Toggle navigation menu">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div data-nav="Main Page" class="flex items-center space-x-2.5 cursor-pointer">
+                    <div class="w-8 h-8 bg-[#0645ad] text-white rounded flex items-center justify-center font-bold shadow-sm">
+                        <i class="fa-solid fa-ship text-sm"></i>
+                    </div>
+                    <div>
+                        <span class="wiki-title text-xl font-bold tracking-tight text-gray-900">Sails<span class="text-[#0645ad]">Pedia</span></span>
+                        <span class="block text-[10px] text-gray-500 uppercase tracking-widest font-semibold -mt-1">Playtest Wiki</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search Bar -->
+            <div class="relative flex-1 max-w-md">
+                <div class="relative">
+                    <input type="text" id="search-input" placeholder="Search SailsPedia..." 
+                           class="w-full pl-9 pr-8 py-1.5 text-xs bg-gray-50 border border-gray-300 rounded focus:bg-white focus:outline-none focus:border-[#36c] transition">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-gray-400 text-xs"></i>
+                    <button id="clear-search-btn" class="hidden absolute right-2.5 top-2 text-gray-400 hover:text-gray-600 text-xs">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
+                <div id="search-results" class="hidden absolute left-0 right-0 top-full mt-1 bg-white border border-gray-300 rounded shadow-lg z-50 max-h-80 overflow-y-auto text-xs"></div>
+            </div>
+
+            <div class="hidden sm:flex items-center space-x-2 text-xs text-gray-600 border-l pl-3 border-gray-200">
+                <i class="fa-brands fa-github text-gray-700 text-base"></i>
+                <span class="font-medium text-gray-700">GitHub Ready</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Page Body Container -->
+    <div class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 py-5 flex gap-6">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="hidden md:block w-52 flex-shrink-0 text-xs text-gray-700 select-none">
+            <div class="sticky top-20 space-y-4">
+                <div class="bg-white p-3 rounded border border-gray-300 shadow-2xs">
+                    <h3 class="font-bold text-gray-900 border-b border-gray-200 pb-1.5 mb-2 uppercase text-[10px] tracking-wider text-gray-500">Navigation</h3>
+                    <ul class="space-y-2">
+                        <li><a data-nav="Main Page" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-house w-4 text-center text-gray-400"></i><span>Main Page</span></a></li>
+                        <li><a onclick="showAllArticles()" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-list-ul w-4 text-center text-gray-400"></i><span>All Articles</span></a></li>
+                        <li><a onclick="openRandomPage()" class="wiki-link flex items-center space-x-2"><i class="fa-solid fa-dice w-4 text-center text-gray-400"></i><span>Random Article</span></a></li>
+                    </ul>
+                </div>
+
+                <div class="bg-white p-3 rounded border border-gray-300 shadow-2xs">
+                    <h3 class="font-bold text-gray-900 border-b border-gray-200 pb-1.5 mb-2 uppercase text-[10px] tracking-wider text-gray-500">Categories</h3>
+                    <ul id="category-sidebar-list" class="space-y-2"></ul>
+                </div>
+
+                <div class="p-2.5 text-[11px] text-gray-600 leading-relaxed bg-blue-50/70 rounded border border-blue-200">
+                    <p class="font-bold text-gray-800 mb-1"><i class="fa-brands fa-github text-blue-600 mr-1"></i> How to add articles:</p>
+                    <p>Edit your <code class="bg-white px-1 border rounded text-[10px] font-mono">articles.js</code> file in GitHub to instantly update pages!</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Article Area -->
+        <main class="flex-1 min-w-0 bg-white border border-[#a2a9b1] rounded p-5 sm:p-8 shadow-2xs">
+            
+            <!-- Article Header -->
+            <div class="border-b border-[#a2a9b1] pb-3 mb-5">
+                <h1 id="article-title" class="wiki-title text-2xl sm:text-3xl text-gray-900 leading-tight">Loading...</h1>
+                <p id="article-subtitle" class="text-xs text-gray-500 mt-1 italic">From SailsPedia, the official playtest encyclopedia</p>
+            </div>
+
+            <!-- Article Content Container -->
+            <div id="article-content" class="text-sm leading-relaxed text-gray-800 space-y-4"></div>
+
+            <!-- Category Tag Footer -->
+            <div class="mt-10 pt-3 border-t border-[#a2a9b1] text-xs bg-gray-50 p-2.5 rounded flex items-center gap-2">
+                <span class="font-bold text-gray-600">Category:</span>
+                <span id="article-category-tag" class="inline-block"></span>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        /* =========================================================================
+         * ⚓ SAILSPEDIA SCRIPT ENGINE
+         * =========================================================================
+         * Loads window.ARTICLES_DATABASE from articles.js (or fallback data below).
+         * ========================================================================= */
+
+        const DEFAULT_ARTICLES = {
+            "Main Page": {
+                title: "Main Page",
+                category: "System Overview",
+                infobox: {
+                    title: "Sails Playtest",
+                    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&auto=format&fit=crop&q=80",
+                    caption: "Official Sails Playtest Build v0.4.2",
+                    stats: {
+                        "Developer": "Solo Developer",
+                        "Phase": "Closed Playtest",
+                        "Version": "v0.4.2",
+                        "Platform": "PC / Web"
+                    }
+                },
+                content: `== Welcome to SailsPedia ==
+Welcome to **SailsPedia**, the official wiki for the *Sails* naval combat and exploration playtest! All game data, ships, items, and mechanics are documented here.
+
+== Featured Articles ==
+* [[HMS Sovereign]] - Heavy Tier V flagship warship.
+* [[Corsair Syndicate]] - Rogue outlaw pirate faction.
+* [[Sunken Archipelago]] - High-risk open ocean PvP zone.
+* [[Sailing Mechanics]] - Master wind vectors and tacking.
+
+== GitHub Editing Guide ==
+All article data is stored in the separate \`articles.js\` file on GitHub. Simply add or edit entries in \`articles.js\` to update this wiki!`
+            },
+
+            "HMS Sovereign": {
+                title: "HMS Sovereign",
+                category: "Ships & Vessels",
+                infobox: {
+                    title: "HMS Sovereign",
+                    image: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=600&auto=format&fit=crop&q=80",
+                    caption: "The HMS Sovereign firing broadside cannons.",
+                    stats: {
+                        "Ship Class": "Tier V Galleon",
+                        "Hull HP": "4,500 HP",
+                        "Cannons": "32 Heavy Broadside",
+                        "Top Speed": "14 Knots",
+                        "Crew Size": "4-6 Players"
+                    }
+                },
+                content: `The **HMS Sovereign** is the heaviest warship available in the current playtest. Built with triple-decked oak plating, it is designed for fleet combat and zone control.
+
+== Overview ==
+Commanding the HMS Sovereign requires a coordinated crew. While extremely durable, its maneuverability is low when sailing into headwinds.
+
+![HMS Sovereign at dock](https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&auto=format&fit=crop&q=80)
+
+== Crafting Requirements ==
+* 500x Hardwood Timber
+* 250x Refined Iron Ingot
+* 120x Reinforced Canvas
+* 1x Blueprint (Dropped in [[Sunken Archipelago]])`
+            },
+
+            "Corsair Syndicate": {
+                title: "Corsair Syndicate",
+                category: "Factions & Lore",
+                infobox: {
+                    title: "Corsair Syndicate",
+                    image: "https://images.unsplash.com/photo-1569263979104-865ab7cd8d13?w=600&auto=format&fit=crop&q=80",
+                    caption: "Official Banner of the Syndicate",
+                    stats: {
+                        "Type": "Playable Faction",
+                        "Base": "Smuggler's Cove",
+                        "Specialty": "Speed & Boarding"
+                    }
+                },
+                content: `The **Corsair Syndicate** is an outlaw coalition operating in the southern waters. Members specialize in high-speed raiding and boarding tactics.
+
+== Faction Bonuses ==
+* **+15% Boarding Damage** when using melee cutlasses.
+* **+10% Sail Trimming Speed** on light sloops and brigs.`
+            },
+
+            "Sunken Archipelago": {
+                title: "Sunken Archipelago",
+                category: "Locations & Zones",
+                infobox: {
+                    title: "Sunken Archipelago",
+                    image: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?w=600&auto=format&fit=crop&q=80",
+                    caption: "Tropical reefs in the Archipelago",
+                    stats: {
+                        "Danger Rating": "High (PvP Enabled)",
+                        "Recommended Tier": "Tier III+",
+                        "Key Hazard": "Shallow Reefs & Storms"
+                    }
+                },
+                content: `The **Sunken Archipelago** is a high-risk maritime region filled with coral reefs and submerged treasure vaults.
+
+== Hazards ==
+* Shallow reefs will damage large vessels like the [[HMS Sovereign]].
+* Unpredictable storm fronts create high wave swells.`
+            },
+
+            "Sailing Mechanics": {
+                title: "Sailing Mechanics",
+                category: "Game Mechanics",
+                infobox: {
+                    title: "Sailing Mechanics",
+                    image: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?w=600&auto=format&fit=crop&q=80",
+                    caption: "Wind angle alignment guide",
+                    stats: {
+                        "Physics Engine": "Wind Vector Sim",
+                        "Controls": "A/D Trim, W/S Sails"
+                    }
+                },
+                content: `Sailing speed in *Sails* depends on your ship's angle relative to the wind direction.
+
+== Wind Angles & Efficiency ==
+* **Downwind (100% Speed):** Wind blowing directly from behind.
+* **Crosswind (80% Speed):** Sails angled at 45 degrees.
+* **Headwind (Tacking Required):** Zig-zagging required to travel forward.`
+            }
+        };
+
+        // Use window.ARTICLES_DATABASE loaded from articles.js, or fallback to DEFAULT_ARTICLES
+        const getArticlesDatabase = () => window.ARTICLES_DATABASE || DEFAULT_ARTICLES;
+
+        let currentPage = "Main Page";
+
+        function parseWikiMarkdown(text) {
+            if (!text) return "";
+
+            let html = escapeHtml(text);
+
+            // Section Headings: == Section == and === Subsection ===
+            html = html.replace(/^==\s*(.*?)\s*==$/gm, '<h2 class="wiki-h2 text-xl font-bold text-gray-900 mt-6 mb-3 pb-1">$1</h2>');
+            html = html.replace(/^===\s*(.*?)\s*===$/gm, '<h3 class="text-base font-bold text-gray-900 mt-4 mb-2">$1</h3>');
+
+            // Images ![caption](url)
+            html = html.replace(/!\[(.*?)\]\((.*?)\)/g, function(match, caption, url) {
+                return `
+                    <div class="my-4 p-2 bg-gray-50 border border-gray-200 rounded max-w-md mx-auto text-center">
+                        <img src="${url}" alt="${caption}" class="w-full h-auto rounded border border-gray-200">
+                        ${caption ? `<p class="text-xs text-gray-500 italic mt-1.5">${caption}</p>` : ''}
+                    </div>
+                `;
+            });
+
+            // Bold & Italics
+            html = html.replace(/'''(.*?)'''/g, '<strong>$1</strong>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/''(.*?)''/g, '<em>$1</em>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+
+            // Blockquotes
+            html = html.replace(/^&gt;\s*(.*)$/gm, '<blockquote class="border-l-4 border-[#0645ad] pl-3 py-1 my-3 italic text-gray-700 bg-gray-50 rounded-r">$1</blockquote>');
+
+            // Wiki Links [[Page Title]]
+            html = html.replace(/\[\[(.*?)\]\]/g, function(match, target) {
+                const trimmed = target.trim();
+                const db = getArticlesDatabase();
+                const exists = !!db[trimmed];
+                const cls = exists ? "wiki-link" : "wiki-link missing";
+                return `<a data-nav="${escapeHtml(trimmed)}" class="${cls}">${escapeHtml(trimmed)}</a>`;
+            });
+
+            // Bullet Lists
+            html = html.replace(/^\*\s*(.*)$/gm, '<li class="ml-5 list-disc my-0.5">$1</li>');
+
+            // Paragraph Line Breaks
+            html = html.replace(/\n\n/g, '<br><br>');
+
+            return html;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        function renderPage(pageKey) {
+            currentPage = pageKey;
+            const db = getArticlesDatabase();
+            const article = db[pageKey];
+            const contentEl = document.getElementById("article-content");
+            const titleEl = document.getElementById("article-title");
+            const catTagEl = document.getElementById("article-category-tag");
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            if (!article) {
+                titleEl.innerText = pageKey;
+                catTagEl.innerHTML = `<span class="text-gray-400 italic">Uncategorized</span>`;
+                contentEl.innerHTML = `
+                    <div class="p-6 text-center bg-gray-50 border border-dashed border-gray-300 rounded my-4">
+                        <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-400 mb-2"></i>
+                        <h3 class="font-bold text-gray-700 text-base mb-1">Page "${escapeHtml(pageKey)}" does not exist yet.</h3>
+                        <p class="text-xs text-gray-500 max-w-md mx-auto">To add this page, open <code class="bg-gray-200 px-1 py-0.5 rounded text-gray-800">articles.js</code> in your GitHub repository and add a new article block!</p>
+                        <button onclick="renderPage('Main Page')" class="mt-4 px-3 py-1.5 bg-[#0645ad] text-white rounded text-xs font-bold hover:bg-blue-800 transition">
+                            Back to Main Page
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            titleEl.innerText = article.title;
+            catTagEl.innerHTML = `<a onclick="filterByCategory('${escapeHtml(article.category)}')" class="wiki-link bg-white border border-gray-300 px-2 py-0.5 rounded text-xs">${escapeHtml(article.category)}</a>`;
+
+            let infoboxHtml = "";
+            if (article.infobox) {
+                let statsRows = "";
+                if (article.infobox.stats) {
+                    for (const [k, v] of Object.entries(article.infobox.stats)) {
+                        statsRows += `
+                            <tr class="border-t border-gray-200">
+                                <th class="text-left font-bold py-1 px-2 bg-gray-100 text-gray-700 border-r border-gray-200">${escapeHtml(k)}</th>
+                                <td class="py-1 px-2 text-gray-800">${escapeHtml(v)}</td>
+                            </tr>
+                        `;
+                    }
+                }
+
+                infoboxHtml = `
+                    <div class="infobox rounded shadow-2xs overflow-hidden mb-4">
+                        <div class="bg-[#cedff2] font-bold text-center py-2 px-3 text-gray-900 border-b border-[#a2a9b1]">
+                            ${escapeHtml(article.infobox.title || article.title)}
+                        </div>
+                        ${article.infobox.image ? `
+                            <div class="p-2 bg-white text-center border-b border-gray-200">
+                                <img src="${escapeHtml(article.infobox.image)}" alt="Article Photo" class="w-full h-40 object-cover rounded border border-gray-200">
+                                ${article.infobox.caption ? `<p class="text-[11px] text-gray-500 italic mt-1">${escapeHtml(article.infobox.caption)}</p>` : ''}
+                            </div>
+                        ` : ''}
+                        <table class="w-full text-xs">
+                            <tbody>${statsRows}</tbody>
+                        </table>
+                    </div>
+                `;
+            }
+
+            const parsedBody = parseWikiMarkdown(article.content);
+            contentEl.innerHTML = infoboxHtml + parsedBody;
+        }
+
+        function buildSidebarCategories() {
+            const listEl = document.getElementById("category-sidebar-list");
+            const db = getArticlesDatabase();
+            const categories = [...new Set(Object.values(db).map(a => a.category))];
+            
+            listEl.innerHTML = categories.map(cat => `
+                <li>
+                    <a onclick="filterByCategory('${escapeHtml(cat)}')" class="wiki-link flex items-center space-x-2">
+                        <i class="fa-solid fa-folder text-amber-500 w-4 text-center"></i>
+                        <span>${escapeHtml(cat)}</span>
+                    </a>
+                </li>
+            `).join('');
+        }
+
+        function filterByCategory(catName) {
+            const db = getArticlesDatabase();
+            const matches = Object.keys(db).filter(k => db[k].category === catName);
+            const titleEl = document.getElementById("article-title");
+            const contentEl = document.getElementById("article-content");
+            const catTagEl = document.getElementById("article-category-tag");
+
+            titleEl.innerText = `Category: ${catName}`;
+            catTagEl.innerHTML = `<span class="bg-blue-100 text-blue-800 border border-blue-200 px-2 py-0.5 rounded font-bold text-xs">${escapeHtml(catName)}</span>`;
+
+            let html = `<p class="text-xs text-gray-600 mb-4">Articles tagged under <strong>"${escapeHtml(catName)}"</strong> (${matches.length} articles):</p>`;
+            html += `<ul class="space-y-2.5 list-disc pl-5">`;
+            matches.forEach(key => {
+                html += `<li><a data-nav="${escapeHtml(key)}" class="wiki-link text-sm font-semibold">${escapeHtml(key)}</a></li>`;
+            });
+            html += `</ul>`;
+
+            contentEl.innerHTML = html;
+        }
+
+        function showAllArticles() {
+            const db = getArticlesDatabase();
+            const keys = Object.keys(db).sort();
+            const titleEl = document.getElementById("article-title");
+            const contentEl = document.getElementById("article-content");
+            const catTagEl = document.getElementById("article-category-tag");
+
+            titleEl.innerText = "All Articles Directory";
+            catTagEl.innerHTML = `<span class="text-gray-400 italic text-xs">Index</span>`;
+
+            let html = `<div class="grid grid-cols-1 sm:grid-cols-2 gap-3">`;
+            keys.forEach(key => {
+                const art = db[key];
+                html += `
+                    <div class="p-3 bg-gray-50 border border-gray-200 rounded hover:border-blue-400 transition">
+                        <a data-nav="${escapeHtml(key)}" class="wiki-link font-bold text-sm block">${escapeHtml(art.title)}</a>
+                        <span class="text-[10px] text-gray-500 bg-white border px-1.5 py-0.5 rounded inline-block mt-1">${escapeHtml(art.category)}</span>
+                    </div>
+                `;
+            });
+            html += `</div>`;
+
+            contentEl.innerHTML = html;
+        }
+
+        function openRandomPage() {
+            const db = getArticlesDatabase();
+            const keys = Object.keys(db);
+            const randomKey = keys[Math.floor(Math.random() * keys.length)];
+            renderPage(randomKey);
+        }
+
+        const searchInput = document.getElementById("search-input");
+        const searchResults = document.getElementById("search-results");
+        const clearSearchBtn = document.getElementById("clear-search-btn");
+
+        searchInput.addEventListener("input", function() {
+            const query = this.value.trim().toLowerCase();
+            const db = getArticlesDatabase();
+
+            if (query.length > 0) {
+                clearSearchBtn.classList.remove("hidden");
+                const matches = Object.keys(db).filter(k => 
+                    k.toLowerCase().includes(query) || 
+                    db[k].content.toLowerCase().includes(query)
+                );
+
+                if (matches.length === 0) {
+                    searchResults.innerHTML = `<div class="p-3 text-gray-400 text-center">No matching articles found.</div>`;
+                } else {
+                    searchResults.innerHTML = matches.map(key => `
+                        <div data-nav="${escapeHtml(key)}" class="p-2.5 hover:bg-blue-50 border-b border-gray-100 cursor-pointer flex justify-between items-center">
+                            <div>
+                                <div class="font-bold text-[#0645ad]">${escapeHtml(key)}</div>
+                                <div class="text-[10px] text-gray-500">${escapeHtml(db[key].category)}</div>
+                            </div>
+                            <i class="fa-solid fa-chevron-right text-gray-300"></i>
+                        </div>
+                    `).join('');
+                }
+                searchResults.classList.remove("hidden");
+            } else {
+                clearSearchBtn.classList.add("hidden");
+                searchResults.classList.add("hidden");
+            }
+        });
+
+        clearSearchBtn.addEventListener("click", () => {
+            searchInput.value = "";
+            clearSearchBtn.classList.add("hidden");
+            searchResults.classList.add("hidden");
+        });
+
+        // Global Event Delegation for Dynamic Article Navigation
+        document.addEventListener('click', (e) => {
+            const navEl = e.target.closest('[data-nav]');
+            if (navEl) {
+                e.preventDefault();
+                const target = navEl.getAttribute('data-nav');
+                if (target) {
+                    searchResults.classList.add("hidden");
+                    renderPage(target);
+                }
+            }
+        });
+
+        // Mobile Menu Toggle
+        document.getElementById("mobile-menu-btn").addEventListener("click", () => {
+            document.getElementById("sidebar").classList.toggle("hidden");
+        });
+
+        // Initialization on Load
+        window.onload = function() {
+            buildSidebarCategories();
+            renderPage("Main Page");
+        };
+    </script>
+</body>
+</html>
