@@ -175,6 +175,48 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
 
         let currentPage = "Main Page";
 
+        // Navigation state routing
+        function navigateTo(type, value, pushToHistory = true) {
+            if (pushToHistory) {
+                history.pushState({ type, value }, "", `#${encodeURIComponent(value)}`);
+            }
+            
+            if (type === 'page') {
+                renderPage(value);
+            } else if (type === 'category') {
+                renderCategoryPage(value);
+            } else if (type === 'all') {
+                showAllArticles();
+            }
+        }
+
+        // Browser Back and Forward Button Listener
+        window.addEventListener('popstate', (event) => {
+            if (event.state) {
+                navigateTo(event.state.type, event.state.value, false);
+            } else {
+                handleInitialLoad();
+            }
+        });
+
+        // Parse initial URL fragment/hash on fresh load
+        function handleInitialLoad() {
+            const hash = decodeURIComponent(window.location.hash.replace('#', ''));
+            const db = getArticlesDatabase();
+
+            if (!hash || hash === 'Main Page') {
+                renderPage('Main Page');
+            } else if (db[hash]) {
+                renderPage(hash);
+            } else if (hash === 'Ships & Vessels' || hash === 'Traders') {
+                renderCategoryPage(hash);
+            } else if (hash === 'All Articles') {
+                showAllArticles();
+            } else {
+                renderPage(hash);
+            }
+        }
+
         function parseWikiMarkdown(text) {
             if (!text) return "";
 
@@ -242,7 +284,7 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
                         <i class="fa-solid fa-file-circle-xmark text-4xl text-gray-400 mb-2"></i>
                         <h3 class="font-bold text-gray-700 text-base mb-1">Page "${escapeHtml(pageKey)}" does not exist yet.</h3>
                         <p class="text-xs text-gray-500 max-w-md mx-auto">This article has not been added to your data files yet.</p>
-                        <button onclick="renderPage('Main Page')" class="mt-4 px-3 py-1.5 bg-[#0645ad] text-white rounded text-xs font-bold hover:bg-blue-800 transition">
+                        <button onclick="navigateTo('page', 'Main Page')" class="mt-4 px-3 py-1.5 bg-[#0645ad] text-white rounded text-xs font-bold hover:bg-blue-800 transition">
                             Back to Main Page
                         </button>
                     </div>
@@ -433,7 +475,7 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
                 if (category) {
                     searchResults.classList.add("hidden");
                     document.getElementById("sidebar").classList.add("hidden");
-                    renderCategoryPage(category);
+                    navigateTo('category', category);
                 }
                 return;
             }
@@ -445,7 +487,7 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
                 if (target) {
                     searchResults.classList.add("hidden");
                     document.getElementById("sidebar").classList.add("hidden");
-                    renderPage(target);
+                    navigateTo('page', target);
                 }
                 return;
             }
@@ -455,7 +497,7 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
                 e.preventDefault();
                 searchResults.classList.add("hidden");
                 document.getElementById("sidebar").classList.add("hidden");
-                showAllArticles();
+                navigateTo('all', 'All Articles');
             }
         });
 
@@ -464,7 +506,7 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
         });
 
         window.onload = function() {
-            renderPage("Main Page");
+            handleInitialLoad();
         };
     </script>
 </body>
