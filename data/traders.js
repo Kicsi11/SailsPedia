@@ -7,6 +7,7 @@ window.ARTICLES_DATABASE["Traders"] = {
     infobox: {
         title: "Merchant System",
         caption: "Commerce in SAILS",
+        image: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Role": "Economy & Commerce",
             "Locations": "Outposts & Settlements"
@@ -32,6 +33,7 @@ window.ARTICLES_DATABASE["Tavern"] = {
     infobox: {
         title: "Tavern Keeper",
         caption: "Local Inn & Tavern",
+        image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Consumables & Rumors"
@@ -52,6 +54,7 @@ window.ARTICLES_DATABASE["Currency Exchange"] = {
     infobox: {
         title: "Money Changer",
         caption: "Financial Services",
+        image: "https://images.unsplash.com/photo-1610375461246-83df859d849d?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Financial Vendor",
             "Primary Goods": "Currency Converting"
@@ -72,6 +75,7 @@ window.ARTICLES_DATABASE["Food"] = {
     infobox: {
         title: "Food Merchant",
         caption: "Provisions & Rations",
+        image: "https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Rations & Ingredients"
@@ -92,6 +96,7 @@ window.ARTICLES_DATABASE["Shipwright"] = {
     infobox: {
         title: "Master Shipwright",
         caption: "Naval Services & Repair",
+        image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Ships, Parts & Repair"
@@ -112,6 +117,7 @@ window.ARTICLES_DATABASE["Materials"] = {
     infobox: {
         title: "Resource Merchant",
         caption: "Crafting & Building Supplies",
+        image: "https://images.unsplash.com/photo-1504917599217-d4dc5ebe6122?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Raw Resources & Ores"
@@ -132,6 +138,7 @@ window.ARTICLES_DATABASE["Armor Shop"] = {
     infobox: {
         title: "Armorer",
         caption: "Protective Gear & Apparel",
+        image: "https://images.unsplash.com/photo-1533105079780-92b9be482077?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Armor & Clothing"
@@ -152,6 +159,7 @@ window.ARTICLES_DATABASE["Weapon Shop"] = {
     infobox: {
         title: "Weaponsmith",
         caption: "Arms & Munitions",
+        image: "https://images.unsplash.com/photo-1595590424283-b8f17842773f?w=600&auto=format&fit=crop&q=80",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Weapons & Ammo"
