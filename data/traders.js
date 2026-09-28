@@ -33,7 +33,7 @@ window.ARTICLES_DATABASE["Tavern"] = {
     infobox: {
         title: "Tavern Keeper",
         caption: "Local Inn & Tavern",
-        image: "https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=600&auto=format&fit=crop&q=80",
+        image: "https://imgur.com/a/ykWwUJT",
         stats: {
             "Type": "Vendor",
             "Primary Goods": "Consumables & Rumors"
