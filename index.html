@@ -157,6 +157,20 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
             }
         };
 
+        const CATEGORY_DESCRIPTIONS = {
+            "Traders": `
+                <div class="mb-6 p-4 bg-gray-50 border border-gray-200 rounded text-sm text-gray-700 leading-relaxed">
+                    <h2 class="wiki-h2 text-xl font-bold text-gray-900 mb-2 border-b border-gray-300 pb-1">Overview of Merchants & Traders</h2>
+                    <p class="mb-3">
+                        <strong>Traders</strong> are vital Non-Player Characters (NPCs) and vendors scattered throughout ports, settlements, and trade hubs. They serve as the primary backbone of the economy in <em>Sails</em>, offering players places to buy supplies, sell harvested goods, upgrade ship components, and acquire specialized items.
+                    </p>
+                    <p>
+                        Depending on their specific role, traders offer different stock inventories, price multipliers, and specialized services. Browse the available trader types below to learn more about their locations, inventories, and trading mechanics.
+                    </p>
+                </div>
+            `
+        };
+
         const getArticlesDatabase = () => window.ARTICLES_DATABASE || DEFAULT_ARTICLES;
 
         let currentPage = "Main Page";
@@ -309,18 +323,21 @@ Welcome to **SailsPedia**, your resource for all *Sails* information!`
                 .filter(key => db[key].category === categoryName)
                 .sort((a, b) => a.localeCompare(b));
 
+            let html = CATEGORY_DESCRIPTIONS[categoryName] || "";
+
             if (matches.length === 0) {
-                contentEl.innerHTML = `
+                html += `
                     <div class="p-6 text-center bg-gray-50 border border-dashed border-gray-300 rounded my-4">
                         <i class="fa-solid fa-folder-open text-3xl text-gray-400 mb-2"></i>
                         <p class="text-xs text-gray-500">No articles currently listed under <strong>${escapeHtml(categoryName)}</strong>.</p>
                     </div>
                 `;
+                contentEl.innerHTML = html;
                 return;
             }
 
-            let html = `
-                <p class="text-xs text-gray-600 mb-5">Showing all entries listed under <span class="font-bold text-gray-800">${escapeHtml(categoryName)}</span>:</p>
+            html += `
+                <h2 class="wiki-h2 text-lg font-bold text-gray-900 mb-3">Available ${escapeHtml(categoryName)}</h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
             `;
 
